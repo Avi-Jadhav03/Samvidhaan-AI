@@ -20,3 +20,9 @@ def type_identifier(state: LegalAuditState):
     result = model.invoke(prompt)
     return {"document_type":result.content}
 
+def meaning_extractor(state : LegalAuditState):
+    prompt = f"im giving you a raw document and its type ,you task is to extract the meaning in key value pair  in structured format and return the output in json format. every meaning should be extracted with value not having in detail description, just main word\n\nDocument:\n{state['raw_document']}\n\nType of Document:\n{state['document_type']}"
+
+    result = model.invoke(prompt)
+    parsed = json.loads(result.content)
+    return {"extracted_clauses": parsed}
