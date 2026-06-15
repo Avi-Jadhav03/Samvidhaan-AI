@@ -10,6 +10,10 @@ Agreement Start Date: 1st January 2024
 from state import LegalAuditState
 from agents import type_identifier, meaning_extractor
 
+from agents import law_fetcher
+
+
+
 test_state = {
     "raw_document": test_document,
     "document_type": "",
@@ -22,10 +26,16 @@ test_state = {
     "final_report": ""
 }
 
+# Run agent 1
 result1 = type_identifier(test_state)
 print("Type:", result1)
-
 test_state.update(result1)
 
+# Run agent 2
 result2 = meaning_extractor(test_state)
 print("Extracted:", result2)
+test_state.update(result2)
+
+# Run agent 3
+result3 = law_fetcher(test_state)
+print("Laws:", result3)

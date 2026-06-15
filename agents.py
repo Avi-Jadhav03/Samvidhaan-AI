@@ -4,7 +4,9 @@ import json
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from state import LegalAuditState
-
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 
 load_dotenv()
 
@@ -13,6 +15,17 @@ groq_api_key = os.getenv("GROQ_API_KEY")
 model = ChatGroq(
     model="llama-3.3-70b-versatile"
 )
+
+
+# Load the vector store from disk
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+vectorstore = Chroma(
+    persist_directory="vectorstore/",
+    embedding_function=embeddings
+)
+retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+
+
 
 def type_identifier(state: LegalAuditState):
     prompt = f"""You are an expert Indian legal document analyst.
@@ -51,3 +64,18 @@ def meaning_extractor(state : LegalAuditState):
     cleaned = cleaned.strip()
     parsed = json.loads(cleaned)
     return {"extracted_clauses": parsed}
+
+def law_fetcher(state: LegalAuditState):
+    # Use retry_query if available, otherwise build from extracted clauses
+    if state["retry_query"]:
+        query = state["retry_query"]
+    else:
+        query = f"Laws related to {state['document_type']} in India covering {str(state['extracted_clauses'])}"
+    
+    # Search vector store
+    docs = retriever.invoke(query)
+    
+    # Extract just the text from each retrieved document
+    retrieved_laws = [doc.page_content for doc in docs]
+    
+    return {"retrieved_laws": retrieved_laws}

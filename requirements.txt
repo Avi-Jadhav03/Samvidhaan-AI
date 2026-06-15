@@ -5,3 +5,4 @@ python-dotenv
 chromadb
 langchain-community
 langchain-hugginface
+langchain-chroma
