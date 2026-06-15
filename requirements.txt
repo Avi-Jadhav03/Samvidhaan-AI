@@ -2,3 +2,6 @@ langchain-groq
 pypdf
 langgraph
 python-dotenv
+chromadb
+langchain-community
+langchain-hugginface
