@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
-from state import LegalAuditState
-from agents import (
+from llm.state import LegalAuditState
+from llm.agents import (
     type_identifier,
     meaning_extractor,
     law_fetcher,

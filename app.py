@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_community.document_loaders import PyPDFLoader
-from main import app as pipeline
+from llm.main import app as pipeline
 import tempfile
 import os
 import ast

@@ -3,7 +3,7 @@ import json
 
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from state import LegalAuditState
+from llm.state import LegalAuditState
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_chroma import Chroma
